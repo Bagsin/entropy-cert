@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrupy Certificate Generator - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-section {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .hero-title {
+            font-size: 3.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            color: white;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .secondary-btn {
+            background: white;
+            color: #333;
+            border: 2px solid #D4AF37;
+        }
+
+        .secondary-btn:hover {
+            background: #D4AF37;
+            color: white;
+        }
+
+        .demo-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: 40px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .demo-certificate {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 5px solid #D4AF37;
+            border-radius: 10px;
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .footer {
+            margin-top: 60px;
+            color: white;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5em;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-btn {
+                width: 80%;
+                max-width: 300px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-section {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero-section">
+            <h1 class="hero-title">Entrupy Certificate Generator</h1>
+            <p class="hero-subtitle">
+                Create professional-looking authenticity certificates with customizable data.<br>
+                Perfect replica of the original Entrupy certificate design.
+            </p>
+            
+            <div class="cta-buttons">
+                <a href="form.html" class="cta-btn primary-btn">🚀 Create Certificate</a>
+                <a href="certificate.html" class="cta-btn secondary-btn">👀 View Sample</a>
+            </div>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3 class="feature-title">Easy Form Input</h3>
+                <p class="feature-description">
+                    Fill out a simple form with all certificate details including holder name, brand, material, and dates.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🖼️</div>
+                <h3 class="feature-title">Image Upload</h3>
+                <p class="feature-description">
+                    Upload product images with drag & drop support. Supports JPG, PNG, and GIF formats up to 5MB.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3 class="feature-title">Authentic Design</h3>
+                <p class="feature-description">
+                    Pixel-perfect replica of the original Entrupy certificate with gold borders and watermarks.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💾</div>
+                <h3 class="feature-title">Export Options</h3>
+                <p class="feature-description">
+                    Download as PNG, print directly, or share via social media. Perfect for professional use.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3 class="feature-title">Responsive Design</h3>
+                <p class="feature-description">
+                    Works perfectly on desktop, tablet, and mobile devices. Create certificates anywhere.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Instant Preview</h3>
+                <p class="feature-description">
+                    See your certificate update in real-time as you type. No waiting, no refreshing required.
+                </p>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>How it works</h2>
+            <div class="demo-certificate">
+                <strong>Step 1:</strong> Click "Create Certificate" → Fill the form<br><br>
+                <strong>Step 2:</strong> Upload product image (optional)<br><br>
+                <strong>Step 3:</strong> Generate and download your certificate<br><br>
+                <em>That's it! Your professional certificate is ready.</em>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <a href="form.html" class="cta-btn primary-btn">Get Started Now</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 Entrupy Certificate Generator • Made for demonstration purposes</p>
+            <p>Ready to deploy on Vercel • No backend required</p>
+        </div>
+    </div>
+
+    <script>
+        console.log('Entrupy Certificate Generator loaded');
+    </script>
+</body>
+</html>

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrupy Certificate Generator - Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #D4AF37;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .image-upload {
+            border: 3px dashed #D4AF37;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background: #fefef9;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .image-upload:hover {
+            background: #fff9e6;
+            border-color: #B8941F;
+        }
+
+        .image-upload.dragover {
+            background: #fff3cd;
+            border-color: #B8941F;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #D4AF37;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .image-preview {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .preview-image {
+            max-width: 300px;
+            max-height: 200px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .remove-image {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .generate-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .generate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .generate-button:active {
+            transform: translateY(0);
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #D4AF37;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #B8941F;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                max-width: 95%;
+                margin: 10px auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                margin: 10px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .image-upload {
+                padding: 20px;
+            }
+
+            .upload-icon {
+                font-size: 36px;
+            }
+
+            .upload-text {
+                font-size: 16px;
+            }
+
+            .cta-btn {
+                padding: 15px 30px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 5px;
+            }
+            
+            .form-container {
+                padding: 15px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .image-upload {
+                padding: 15px;
+            }
+
+            .upload-icon {
+                font-size: 32px;
+            }
+
+            .upload-text {
+                font-size: 14px;
+            }
+
+            .upload-subtext {
+                font-size: 12px;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .generate-button {
+                padding: 15px;
+                font-size: 16px;
+            }
+
+            .preview-image {
+                max-width: 250px;
+                max-height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Entrupy Certificate Generator</h1>
+            <p>Create authentic-looking certificates with custom data</p>
+        </div>
+        
+        <div class="form-container">
+            <a href="index.html" class="back-link">← Back to Main Page</a>
+            
+            <form id="certificateForm">
+                <div class="form-group">
+                    <label for="productImage">Product Image:</label>
+                    <div class="image-upload" id="imageUpload">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Click or drag image here</div>
+                        <div class="upload-subtext">Supports JPG, PNG, GIF (max 5MB)</div>
+                        <input type="file" id="productImage" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="image-preview" id="imagePreview" style="display: none;">
+                        <img id="previewImg" class="preview-image" alt="Preview">
+                        <br>
+                        <button type="button" class="remove-image" onclick="removeImage()">Remove Image</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="certificateHolder">Certificate Holder:</label>
+                    <input type="text" id="certificateHolder" placeholder="Enter certificate holder name" value="ООО \"Цифровой гардероб\" / Digital Wardrobe LLC">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="brand">Brand:</label>
+                        <input type="text" id="brand" placeholder="Enter brand name" value="Hermès">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="material">Material:</label>
+                        <input type="text" id="material" placeholder="Enter material" value="Epsom Leather">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="certificateLink">Certificate Link:</label>
+                    <input type="url" id="certificateLink" placeholder="Enter certificate URL" value="cert.entrupy.com/C4B897R">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="issuedDate">Certificate Issued At:</label>
+                        <input type="datetime-local" id="issuedDate" value="2022-10-26T12:33">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="identifier">Identifier:</label>
+                        <input type="text" id="identifier" placeholder="Enter identifier" value="U (2022)">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="watermarkText">Watermark Text:</label>
+                    <input type="text" id="watermarkText" placeholder="Enter watermark" value="C4B897R">
+                </div>
+                
+                <button type="button" class="generate-button" onclick="generateCertificate()">
+                    🎉 Generate Certificate
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Image upload handling
+        const imageUpload = document.getElementById('imageUpload');
+        const fileInput = document.getElementById('productImage');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+        
+        let uploadedImageData = null;
+
+        // Click to upload
+        imageUpload.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // File input change
+        fileInput.addEventListener('change', handleFileSelect);
+
+        // Drag and drop
+        imageUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            imageUpload.classList.add('dragover');
+        });
+
+        imageUpload.addEventListener('dragleave', () => {
+            imageUpload.classList.remove('dragover');
+        });
+
+        imageUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            imageUpload.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        function handleFile(file) {
+            // Validate file
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file.');
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                alert('File size must be less than 5MB.');
+                return;
+            }
+
+            // Read file
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                uploadedImageData = e.target.result;
+                previewImg.src = uploadedImageData;
+                imagePreview.style.display = 'block';
+                imageUpload.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeImage() {
+            uploadedImageData = null;
+            imagePreview.style.display = 'none';
+            imageUpload.style.display = 'block';
+            fileInput.value = '';
+        }
+
+        function generateCertificate() {
+            // Collect all form data
+            const formData = {
+                certificateHolder: document.getElementById('certificateHolder').value,
+                brand: document.getElementById('brand').value,
+                material: document.getElementById('material').value,
+                certificateLink: document.getElementById('certificateLink').value,
+                issuedDate: document.getElementById('issuedDate').value,
+                identifier: document.getElementById('identifier').value,
+                watermarkText: document.getElementById('watermarkText').value,
+                productImage: uploadedImageData
+            };
+
+            // Store data in localStorage
+            localStorage.setItem('certificateData', JSON.stringify(formData));
+
+            // Extract certificate ID from the link or use watermark text
+            let certificateId = formData.watermarkText || 'C4B897R';
+            if (formData.certificateLink) {
+                const linkParts = formData.certificateLink.split('/');
+                certificateId = linkParts[linkParts.length - 1] || certificateId;
+            }
+
+            // Redirect to certificate endpoint using the certificate ID
+            // For local development, use cert.html directly
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                window.location.href = '/cert.html';
+            } else {
+                window.location.href = '/' + certificateId;
+            }
+        }
+
+        // Set current date as default
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const currentDateTime = now.toISOString().slice(0, 16);
+            document.getElementById('issuedDate').value = currentDateTime;
+        });
+    </script>
+</body>
+</html>

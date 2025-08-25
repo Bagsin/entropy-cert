@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "^/$",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/form/?",
+      "dest": "/form.html"
+    },
+    {
+      "src": "/certificate/?",
+      "dest": "/certificate.html"
+    },
+    {
+      "src": "/(.*\\.html)$",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|svg|ico))$",
+      "dest": "/$1"
+    },
+    {
+      "src": "/([A-Za-z0-9]+)/?",
+      "dest": "/cert.html"
+    }
+  ]
+}

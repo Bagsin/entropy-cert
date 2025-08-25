@@ -1,0 +1,14 @@
+{
+  "name": "cert-entropy-project",
+  "version": "1.0.0",
+  "description": "Simple certificate generator",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 3000",
+    "build": "echo 'Static site - no build needed'",
+    "start": "python3 -m http.server 3000"
+  },
+  "keywords": ["certificate", "generator", "html", "javascript"],
+  "author": "",
+  "license": "MIT"
+}

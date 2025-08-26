@@ -786,6 +786,16 @@
             } else {
                 // Если данных нет, используем значения по умолчанию с ID из URL
                 document.getElementById('cert-link').textContent = `cert.entrupy.com/${certificateId}`;
+                
+                // Добавляем дефолтное изображение продукта если его нет
+                const productImg = document.getElementById('productImg');
+                const imagePlaceholder = document.getElementById('imagePlaceholder');
+                
+                // Можно добавить дефолтное изображение или оставить placeholder
+                imagePlaceholder.textContent = 'Product Image';
+                imagePlaceholder.style.display = 'block';
+                productImg.style.display = 'none';
+                
                 generateWatermark(certificateId);
                 generateQRCode(`cert.entrupy.com/${certificateId}`);
             }

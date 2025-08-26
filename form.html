@@ -452,12 +452,7 @@
             }
 
             // Redirect to certificate endpoint using the certificate ID
-            // For local development, use cert.html directly
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                window.location.href = '/cert.html';
-            } else {
-                window.location.href = '/' + certificateId;
-            }
+            window.location.href = '/' + certificateId;
         }
 
         // Set current date as default

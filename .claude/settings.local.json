@@ -6,7 +6,8 @@
       "Bash(curl:*)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:entropy-cert-kappa.vercel.app)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "WebFetch(domain:www.entrupy-cert.com)"
     ],
     "deny": [],
     "ask": []

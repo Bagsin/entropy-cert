@@ -610,11 +610,11 @@
                         </div>
                         
                         <div class="product-thumbnails">
-                            <div class="thumbnail">
+                            <div class="thumbnail" onclick="switchImage(1)">
                                 <img id="thumbnail1" style="display: none;" alt="Thumbnail 1">
                                 <div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 24px;">📷</div>
                             </div>
-                            <div class="thumbnail">
+                            <div class="thumbnail" onclick="switchImage(2)">
                                 <img id="thumbnail2" style="display: none;" alt="Thumbnail 2">  
                                 <div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 24px;">📄</div>
                             </div>
@@ -736,16 +736,57 @@
             }
         }
 
-        function loadCertificateData() {
+        async function loadCertificateData() {
             const certificateId = getCertificateId();
             document.title = `Entrupy Certificate - ${certificateId}`;
+            console.log('Loading certificate with ID:', certificateId);
             
-            // Загружаем данные из localStorage
-            const savedData = localStorage.getItem('certificateData');
+            let data = null;
             
-            if (savedData) {
-                const data = JSON.parse(savedData);
+            try {
+                // Сначала пытаемся загрузить данные из certificate.json
+                const response = await fetch('./certificate.json');
+                if (response.ok) {
+                    const certificateData = await response.json();
+                    // ВСЕГДА используем данные из JSON, но меняем ID на текущий из URL
+                    data = { ...certificateData, certificateId: certificateId, watermarkText: certificateId };
+                    console.log('Loaded certificate data from JSON:', data);
+                } else {
+                    console.log('certificate.json not found (404), using fallback data');
+                    // Fallback данные если JSON недоступен
+                    data = {
+                        certificateId: certificateId,
+                        certificateHolder: "ООО \"Цифровой гардероб\" / Digital Wardrobe LLC",
+                        brand: "Hermès", 
+                        material: "Epsom Leather",
+                        issuedDate: "2022-10-26T12:33",
+                        identifier: "U (2022)",
+                        watermarkText: certificateId,
+                        productImage1: null,
+                        productImage2: null
+                    };
+                    console.log('Using fallback certificate data:', data);
+                }
                 
+            } catch (error) {
+                console.log('Could not load certificate.json, trying localStorage:', error);
+            }
+            
+            // Fallback: пытаемся загрузить из localStorage
+            if (!data) {
+                console.log('JSON not available, trying localStorage...');
+                const savedData = localStorage.getItem('certificateData');
+                if (savedData) {
+                    const localData = JSON.parse(savedData);
+                    // Используем данные из localStorage с ID из URL
+                    data = { ...localData, certificateId: certificateId, watermarkText: certificateId };
+                    console.log('Loaded certificate data from localStorage:', data);
+                } else {
+                    console.log('No localStorage data found');
+                }
+            }
+            
+            if (data) {
                 // Заполняем поля данными
                 if (data.certificateHolder) document.getElementById('cert-holder').textContent = data.certificateHolder;
                 if (data.brand) document.getElementById('cert-brand').textContent = data.brand;
@@ -768,37 +809,168 @@
                     document.getElementById('cert-issued').textContent = formattedDate;
                 }
                 
-                // Загружаем изображение
-                if (data.productImage) {
-                    const productImg = document.getElementById('productImg');
-                    const imagePlaceholder = document.getElementById('imagePlaceholder');
-                    
-                    productImg.src = data.productImage;
-                    productImg.style.display = 'block';
-                    imagePlaceholder.style.display = 'none';
-                }
+                // Загружаем изображения
+                await loadImages(data);
                 
-                // Генерируем водяные знаки с ID из URL
-                generateWatermark(certificateId);
+                // Генерируем водяные знаки с правильным текстом
+                const watermarkText = data.watermarkText || certificateId;
+                generateWatermark(watermarkText);
                 
                 // Генерируем QR код
                 generateQRCode(`cert.entrupy.com/${certificateId}`);
             } else {
-                // Если данных нет, используем значения по умолчанию с ID из URL
+                // Если данных нет, используем значения по умолчанию
                 document.getElementById('cert-link').textContent = `cert.entrupy.com/${certificateId}`;
                 
-                // Добавляем дефолтное изображение продукта если его нет
-                const productImg = document.getElementById('productImg');
-                const imagePlaceholder = document.getElementById('imagePlaceholder');
+                // Устанавливаем дефолтные значения
+                setDefaultValues(certificateId);
                 
-                // Можно добавить дефолтное изображение или оставить placeholder
-                imagePlaceholder.textContent = 'Product Image';
-                imagePlaceholder.style.display = 'block';
-                productImg.style.display = 'none';
+                // Показываем placeholder изображения
+                showPlaceholder();
                 
                 generateWatermark(certificateId);
                 generateQRCode(`cert.entrupy.com/${certificateId}`);
             }
+        }
+        
+        async function loadImages(data) {
+            // Загружаем изображения из base64 данных или файлов
+            if (data.productImage1) {
+                // Основное изображение
+                const productImg = document.getElementById('productImg');
+                const imagePlaceholder = document.getElementById('imagePlaceholder');
+                
+                productImg.src = data.productImage1;
+                productImg.style.display = 'block';
+                imagePlaceholder.style.display = 'none';
+                
+                // Thumbnail 1
+                const thumb1 = document.getElementById('thumbnail1');
+                thumb1.src = data.productImage1;
+                thumb1.style.display = 'block';
+                thumb1.parentElement.querySelector('div').style.display = 'none';
+            }
+            
+            if (data.productImage2) {
+                // Thumbnail 2
+                const thumb2 = document.getElementById('thumbnail2');
+                thumb2.src = data.productImage2;
+                thumb2.style.display = 'block';
+                thumb2.parentElement.querySelector('div').style.display = 'none';
+            }
+            
+            // Сохраняем изображения в глобальные переменные для переключения
+            currentImages.image1 = data.productImage1;
+            currentImages.image2 = data.productImage2;
+            
+            // Если нет изображений в JSON, пытаемся загрузить из файлов
+            if (!data.productImage1 && !data.productImage2) {
+                try {
+                    const response1 = await fetch('./images/product1.jpg');
+                    if (response1.ok) {
+                        const blob1 = await response1.blob();
+                        if (blob1.size > 100) { // Проверяем что это не пустой файл
+                            const imageUrl1 = URL.createObjectURL(blob1);
+                            currentImages.image1 = imageUrl1;
+                            
+                            const productImg = document.getElementById('productImg');
+                            const imagePlaceholder = document.getElementById('imagePlaceholder');
+                            
+                            productImg.src = imageUrl1;
+                            productImg.style.display = 'block';
+                            imagePlaceholder.style.display = 'none';
+                            
+                            // Thumbnail 1
+                            const thumb1 = document.getElementById('thumbnail1');
+                            thumb1.src = imageUrl1;
+                            thumb1.style.display = 'block';
+                            thumb1.parentElement.querySelector('div').style.display = 'none';
+                        }
+                    }
+                    
+                    const response2 = await fetch('./images/product2.jpg');
+                    if (response2.ok) {
+                        const blob2 = await response2.blob();
+                        if (blob2.size > 100) { // Проверяем что это не пустой файл
+                            const imageUrl2 = URL.createObjectURL(blob2);
+                            currentImages.image2 = imageUrl2;
+                            
+                            // Thumbnail 2
+                            const thumb2 = document.getElementById('thumbnail2');
+                            thumb2.src = imageUrl2;
+                            thumb2.style.display = 'block';
+                            thumb2.parentElement.querySelector('div').style.display = 'none';
+                        }
+                    }
+                } catch (error) {
+                    console.log('Could not load images from files');
+                }
+            }
+            
+            // Обновляем стили thumbnail'ов
+            updateThumbnails();
+        }
+        
+        function setDefaultValues(certificateId) {
+            document.getElementById('cert-holder').textContent = 'Certificate Holder';
+            document.getElementById('cert-brand').textContent = 'Brand';
+            document.getElementById('cert-material').textContent = 'Material';
+            document.getElementById('cert-identifier').textContent = 'Verified';
+            
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            }) + ' UTC';
+            document.getElementById('cert-issued').textContent = formattedDate;
+        }
+        
+        function showPlaceholder() {
+            const productImg = document.getElementById('productImg');
+            const imagePlaceholder = document.getElementById('imagePlaceholder');
+            
+            imagePlaceholder.textContent = 'Product Image';
+            imagePlaceholder.style.display = 'block';
+            productImg.style.display = 'none';
+        }
+
+        // Глобальные переменные для изображений
+        let currentImages = { image1: null, image2: null };
+        let currentActiveImage = 1;
+
+        function switchImage(imageNum) {
+            const productImg = document.getElementById('productImg');
+            const imagePlaceholder = document.getElementById('imagePlaceholder');
+            
+            if (imageNum === 1 && currentImages.image1) {
+                productImg.src = currentImages.image1;
+                productImg.style.display = 'block';
+                imagePlaceholder.style.display = 'none';
+                currentActiveImage = 1;
+                updateThumbnails();
+            } else if (imageNum === 2 && currentImages.image2) {
+                productImg.src = currentImages.image2;
+                productImg.style.display = 'block';
+                imagePlaceholder.style.display = 'none';
+                currentActiveImage = 2;
+                updateThumbnails();
+            }
+        }
+
+        function updateThumbnails() {
+            // Обновляем стили thumbnail'ов для показа активного
+            document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+                if (index + 1 === currentActiveImage) {
+                    thumb.style.borderColor = '#D4AF37';
+                    thumb.style.borderWidth = '3px';
+                } else {
+                    thumb.style.borderColor = '#D4AF37';
+                    thumb.style.borderWidth = '2px';
+                }
+            });
         }
 
         function generateQRCode(url) {

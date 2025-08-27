@@ -3,7 +3,10 @@
     "allow": [
       "WebFetch(domain:cert.entrupy.com)",
       "Bash(python3:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:entropy-cert-kappa.vercel.app)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

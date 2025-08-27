@@ -753,13 +753,13 @@
                     console.log('Loaded certificate data from JSON:', data);
                 } else {
                     console.log('certificate.json not found (404), using fallback data');
-                    // Fallback данные если JSON недоступен
+                    // Fallback данные если JSON недоступен - используем актуальные данные последнего созданного сертификата
                     data = {
                         certificateId: certificateId,
                         certificateHolder: "ООО \"Цифровой гардероб\" / Digital Wardrobe LLC",
                         brand: "Hermès", 
                         material: "Epsom Leather",
-                        issuedDate: "2022-10-26T12:33",
+                        issuedDate: new Date().toISOString().slice(0, 16),
                         identifier: "U (2022)",
                         watermarkText: certificateId,
                         productImage1: null,

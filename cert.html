@@ -688,6 +688,58 @@
     </div>
 
     <script>
+        // Supabase configuration
+        const SUPABASE_CONFIG = {
+            url: 'https://your-project.supabase.co',
+            anonKey: 'your-anon-key-here'
+        };
+
+        // Supabase client setup
+        class SupabaseClient {
+            constructor(url, key) {
+                this.url = url;
+                this.key = key;
+                this.headers = {
+                    'apikey': key,
+                    'Authorization': `Bearer ${key}`,
+                    'Content-Type': 'application/json'
+                };
+            }
+
+            async select(table, options = {}) {
+                let url = `${this.url}/rest/v1/${table}`;
+                
+                if (options.eq) {
+                    const [column, value] = Object.entries(options.eq)[0];
+                    url += `?${column}=eq.${value}`;
+                }
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: this.headers
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Supabase select error: ${response.status}`);
+                }
+                
+                return response.json();
+            }
+        }
+
+        // Встроенные данные как fallback
+        const CERTIFICATE_DATA = {
+            "certificateId": "C4B897R",
+            "certificateHolder": "ООО \"Цифровой гардероб\" / Digital Wardrobe LLC",
+            "brand": "Hermès",
+            "material": "Epsom Leather",
+            "issuedDate": "2022-10-26T12:33",
+            "identifier": "U (2022)",
+            "watermarkText": "C4B897R",
+            "productImage1": null,
+            "productImage2": null
+        };
+
         // Get certificate ID from URL
         function getCertificateId() {
             const path = window.location.pathname;
@@ -739,37 +791,59 @@
         async function loadCertificateData() {
             const certificateId = getCertificateId();
             document.title = `Entrupy Certificate - ${certificateId}`;
-            console.log('Loading certificate with ID:', certificateId);
+            console.log('Загружаю сертификат с ID:', certificateId);
             
             let data = null;
             
             try {
-                // Сначала пытаемся загрузить данные из certificate.json
-                const response = await fetch('./certificate.json');
-                if (response.ok) {
-                    const certificateData = await response.json();
-                    // ВСЕГДА используем данные из JSON, но меняем ID на текущий из URL
-                    data = { ...certificateData, certificateId: certificateId, watermarkText: certificateId };
-                    console.log('Loaded certificate data from JSON:', data);
+                // Пытаемся загрузить данные из Supabase
+                if (SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey && 
+                    SUPABASE_CONFIG.url !== 'https://your-project.supabase.co' && 
+                    SUPABASE_CONFIG.anonKey !== 'your-anon-key-here') {
+                    
+                    console.log('Загружаю данные из Supabase...');
+                    const supabase = new SupabaseClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+                    
+                    const result = await supabase.select('certificates', { 
+                        eq: { certificate_id: certificateId } 
+                    });
+                    
+                    if (result && result.length > 0) {
+                        const dbData = result[0];
+                        data = {
+                            certificateId: dbData.certificate_id,
+                            certificateHolder: dbData.certificate_holder,
+                            brand: dbData.brand,
+                            material: dbData.material,
+                            issuedDate: dbData.issued_date,
+                            identifier: dbData.identifier,
+                            watermarkText: dbData.watermark_text || dbData.certificate_id,
+                            productImage1: dbData.product_image1,
+                            productImage2: dbData.product_image2
+                        };
+                        console.log('✅ Данные загружены из Supabase:', data);
+                    } else {
+                        console.log('🔍 Сертификат не найден в базе данных');
+                        throw new Error('Certificate not found in database');
+                    }
                 } else {
-                    console.log('certificate.json not found (404)');
+                    console.log('⚠️ Supabase не настроена');
+                    throw new Error('Supabase not configured');
                 }
                 
             } catch (error) {
-                console.log('Could not load certificate.json, trying localStorage:', error);
-            }
-            
-            // Fallback: пытаемся загрузить из localStorage
-            if (!data) {
-                console.log('JSON not available, trying localStorage...');
+                console.log('Ошибка загрузки из Supabase, пробую localStorage:', error);
+                
+                // Fallback: пытаемся загрузить из localStorage
                 const savedData = localStorage.getItem('certificateData');
                 if (savedData) {
                     const localData = JSON.parse(savedData);
-                    // Используем данные из localStorage с ID из URL
                     data = { ...localData, certificateId: certificateId, watermarkText: certificateId };
-                    console.log('Loaded certificate data from localStorage:', data);
+                    console.log('💾 Данные загружены из localStorage:', data);
                 } else {
-                    console.log('No localStorage data found');
+                    // Final fallback: встроенные данные
+                    data = { ...CERTIFICATE_DATA, certificateId: certificateId, watermarkText: certificateId };
+                    console.log('📦 Использую встроенные данные:', data);
                 }
             }
             

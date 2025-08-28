@@ -625,32 +625,32 @@
                         <div class="certificate-info-container">
                             <div class="info-block">
                                 <div class="info-label">Certificate Holder</div>
-                                <div class="info-value" id="cert-holder">ООО "Цифровой гардероб" / Digital Wardrobe LLC</div>
+                                <div class="info-value" id="cert-holder">Loading...</div>
                             </div>
                             
                             <div class="info-block">
                                 <div class="info-label">Brand</div>
-                                <div class="info-value" id="cert-brand">Hermès</div>
+                                <div class="info-value" id="cert-brand">Loading...</div>
                             </div>
                             
                             <div class="info-block">
                                 <div class="info-label">Material</div>
-                                <div class="info-value" id="cert-material">Epsom Leather</div>
+                                <div class="info-value" id="cert-material">Loading...</div>
                             </div>
                             
                             <div class="info-block">
                                 <div class="info-label">Certificate Link</div>
-                                <div class="info-value" id="cert-link">cert.entrupy.com/PLACEHOLDER</div>
+                                <div class="info-value" id="cert-link">Loading...</div>
                             </div>
                             
                             <div class="info-block">
                                 <div class="info-label">Certificate Issued At</div>
-                                <div class="info-value" id="cert-issued">Oct 26 2022 12:33 UTC</div>
+                                <div class="info-value" id="cert-issued">Loading...</div>
                             </div>
                             
                             <div class="info-block">
                                 <div class="info-label">Identifier</div>
-                                <div class="info-value" id="cert-identifier">U (2022)</div>
+                                <div class="info-value" id="cert-identifier">Loading...</div>
                             </div>
                         </div>
                         
@@ -880,11 +880,13 @@
                 // Генерируем QR код
                 generateQRCode(`cert.entrupy.com/${certificateId}`);
             } else {
-                // Если данных нет, используем значения по умолчанию
+                // Если данных нет, показываем что сертификат не найден
+                document.getElementById('cert-holder').textContent = 'Certificate not found';
+                document.getElementById('cert-brand').textContent = 'No data';
+                document.getElementById('cert-material').textContent = 'No data';
                 document.getElementById('cert-link').textContent = `cert.entrupy.com/${certificateId}`;
-                
-                // Устанавливаем дефолтные значения
-                setDefaultValues(certificateId);
+                document.getElementById('cert-issued').textContent = 'No data';
+                document.getElementById('cert-identifier').textContent = 'No data';
                 
                 // Показываем placeholder изображения
                 showPlaceholder();

@@ -584,7 +584,7 @@
                 console.error('Supabase недоступен, используем localStorage:', error);
                 button.textContent = 'Ошибка БД. Сохранено локально!';
                 
-                // Сохраняем в localStorage как fallback
+                // Сохраняем в localStorage только как временный fallback
                 const localData = {
                     certificateId: formData.certificate_id,
                     certificateHolder: formData.certificate_holder,
@@ -597,7 +597,11 @@
                     productImage2: formData.product_image2
                 };
                 
-                localStorage.setItem('certificateData', JSON.stringify(localData));
+                // Временно сохраняем в localStorage (только если БД недоступна)
+                // Пользователь должен повторить сохранение когда БД будет доступна
+                localStorage.setItem(`certificateData_temp_${formData.certificate_id}`, JSON.stringify(localData));
+                
+                console.log('⚠️ ВНИМАНИЕ: Сертификат сохранен только локально! Повторите сохранение когда интернет заработает.');
                 
                 setTimeout(() => {
                     window.location.href = '/' + formData.certificate_id;

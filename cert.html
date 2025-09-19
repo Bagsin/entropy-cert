@@ -832,18 +832,16 @@
                 }
                 
             } catch (error) {
-                console.log('Ошибка загрузки из Supabase, пробую localStorage:', error);
+                console.log('Ошибка загрузки из Supabase:', error);
                 
-                // Fallback: пытаемся загрузить из localStorage
-                const savedData = localStorage.getItem('certificateData');
-                if (savedData) {
-                    const localData = JSON.parse(savedData);
-                    data = { ...localData, certificateId: certificateId, watermarkText: certificateId };
-                    console.log('💾 Данные загружены из localStorage:', data);
-                } else {
-                    // Final fallback: встроенные данные
+                // Для демо-сертификата показываем встроенные данные
+                if (certificateId === 'C4B897R') {
                     data = { ...CERTIFICATE_DATA, certificateId: certificateId, watermarkText: certificateId };
-                    console.log('📦 Использую встроенные данные:', data);
+                    console.log('📦 Использую встроенные демо-данные для C4B897R:', data);
+                } else {
+                    // Для всех остальных ID показываем "не найден" если нет данных в БД
+                    data = null;
+                    console.log('❌ Сертификат не найден в базе данных:', certificateId);
                 }
             }
             
@@ -881,15 +879,18 @@
                 generateQRCode(`cert.entrupy.com/${certificateId}`);
             } else {
                 // Если данных нет, показываем что сертификат не найден
-                document.getElementById('cert-holder').textContent = 'Certificate not found';
-                document.getElementById('cert-brand').textContent = 'No data';
-                document.getElementById('cert-material').textContent = 'No data';
+                document.getElementById('cert-holder').textContent = 'Сертификат не найден в базе данных';
+                document.getElementById('cert-brand').textContent = `ID: ${certificateId}`;
+                document.getElementById('cert-material').textContent = 'Сертификат еще не создан или удален';
                 document.getElementById('cert-link').textContent = `cert.entrupy.com/${certificateId}`;
-                document.getElementById('cert-issued').textContent = 'No data';
-                document.getElementById('cert-identifier').textContent = 'No data';
+                document.getElementById('cert-issued').textContent = 'Неизвестно';
+                document.getElementById('cert-identifier').textContent = 'Создайте сертификат через форму';
                 
-                // Показываем placeholder изображения
+                // Показываем placeholder изображения  
                 showPlaceholder();
+                
+                // Меняем title страницы
+                document.title = `Сертификат ${certificateId} не найден`;
                 
                 generateWatermark(certificateId);
                 generateQRCode(`cert.entrupy.com/${certificateId}`);
